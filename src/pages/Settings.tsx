@@ -2,177 +2,150 @@
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
-import { MobileHeader } from "@/components/navigation/MobileHeader";
-import { MobileBottomTabs } from "@/components/navigation/MobileBottomTabs";
-import MobileSettings from "@/components/mobile/MobileSettings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Building, Bell, Shield, Save } from "lucide-react";
+import { Settings as SettingsIcon, User, Bell, Shield, Globe, Palette } from "lucide-react";
 
 const Settings = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
-      {/* Mobile Layout */}
-      <div className="md:hidden min-h-screen bg-gray-50 dark:bg-gray-900">
-        <MobileHeader title="Settings" />
-        <div className="p-4">
-          <MobileSettings />
-        </div>
-        <MobileBottomTabs />
-      </div>
-
-      {/* Desktop Layout */}
-      <div className="hidden md:flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-          
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-6 py-8">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    Settings
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Manage your account and application preferences.
-                  </p>
-                </div>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </Button>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+          <div className="container mx-auto px-6 py-8">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Settings
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                Manage your account preferences and system settings.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Settings Menu */}
+              <div className="lg:col-span-1">
+                <Card className="bg-white dark:bg-gray-800">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Settings Menu
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button variant="ghost" className="w-full justify-start">
+                      <User className="h-4 w-4 mr-3" />
+                      Profile
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Bell className="h-4 w-4 mr-3" />
+                      Notifications
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Shield className="h-4 w-4 mr-3" />
+                      Security
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Globe className="h-4 w-4 mr-3" />
+                      Language & Region
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start">
+                      <Palette className="h-4 w-4 mr-3" />
+                      Appearance
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Settings Content */}
+              <div className="lg:col-span-2 space-y-6">
                 {/* Profile Settings */}
                 <Card className="bg-white dark:bg-gray-800">
                   <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <User className="h-5 w-5 mr-2" />
-                      Profile Settings
+                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Profile Information
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
                     <div className="flex items-center space-x-4">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
-                        <AvatarFallback>JS</AvatarFallback>
+                        <AvatarImage src="/placeholder-avatar.jpg" alt="Admin" />
+                        <AvatarFallback>AD</AvatarFallback>
                       </Avatar>
                       <Button variant="outline">Change Photo</Button>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" defaultValue="John" />
+                        <Input id="firstName" defaultValue="Admin" />
                       </div>
                       <div>
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" defaultValue="Smith" />
+                        <Input id="lastName" defaultValue="User" />
                       </div>
                     </div>
                     
                     <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" defaultValue="john.smith@buildpro.com" />
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input id="email" type="email" defaultValue="admin@demo.com" />
                     </div>
                     
                     <div>
-                      <Label htmlFor="phone">Phone</Label>
+                      <Label htmlFor="phone">Phone Number</Label>
                       <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" />
                     </div>
-                  </CardContent>
-                </Card>
-
-                {/* Company Settings */}
-                <Card className="bg-white dark:bg-gray-800">
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Building className="h-5 w-5 mr-2" />
-                      Company Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="companyName">Company Name</Label>
-                      <Input id="companyName" defaultValue="BuildPro Construction" />
-                    </div>
                     
-                    <div>
-                      <Label htmlFor="timezone">Timezone</Label>
-                      <Select defaultValue="est">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="est">Eastern Time (EST)</SelectItem>
-                          <SelectItem value="cst">Central Time (CST)</SelectItem>
-                          <SelectItem value="mst">Mountain Time (MST)</SelectItem>
-                          <SelectItem value="pst">Pacific Time (PST)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="currency">Currency</Label>
-                      <Select defaultValue="usd">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="usd">USD ($)</SelectItem>
-                          <SelectItem value="eur">EUR (€)</SelectItem>
-                          <SelectItem value="gbp">GBP (£)</SelectItem>
-                          <SelectItem value="cad">CAD (C$)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Button>Save Changes</Button>
                   </CardContent>
                 </Card>
 
                 {/* Notification Settings */}
                 <Card className="bg-white dark:bg-gray-800">
                   <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Bell className="h-5 w-5 mr-2" />
-                      Notification Settings
+                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Notification Preferences
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label>Email Notifications</Label>
+                        <Label className="text-base">Email Notifications</Label>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Receive email updates about your projects
+                          Receive email updates about project progress
                         </p>
                       </div>
                       <Switch defaultChecked />
                     </div>
                     
+                    <Separator />
+                    
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label>Safety Alerts</Label>
+                        <Label className="text-base">Push Notifications</Label>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Get notified about safety incidents
+                          Get notified about urgent updates
                         </p>
                       </div>
                       <Switch defaultChecked />
                     </div>
                     
+                    <Separator />
+                    
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label>Weekly Reports</Label>
+                        <Label className="text-base">SMS Notifications</Label>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Automatic weekly progress reports
+                          Receive text messages for critical alerts
                         </p>
                       </div>
                       <Switch />
@@ -183,37 +156,47 @@ const Settings = () => {
                 {/* Security Settings */}
                 <Card className="bg-white dark:bg-gray-800">
                   <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Shield className="h-5 w-5 mr-2" />
+                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
                       Security Settings
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
+                    <div>
+                      <Label htmlFor="currentPassword">Current Password</Label>
+                      <Input id="currentPassword" type="password" />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="newPassword">New Password</Label>
+                      <Input id="newPassword" type="password" />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                      <Input id="confirmPassword" type="password" />
+                    </div>
+                    
+                    <Separator />
+                    
                     <div className="flex items-center justify-between">
                       <div>
-                        <Label>Two-Factor Authentication</Label>
+                        <Label className="text-base">Two-Factor Authentication</Label>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Add an extra layer of security
+                          Add an extra layer of security to your account
                         </p>
                       </div>
                       <Switch />
                     </div>
                     
-                    <Button variant="outline" className="w-full">
-                      Change Password
-                    </Button>
-                    
-                    <Button variant="outline" className="w-full">
-                      Download Account Data
-                    </Button>
+                    <Button>Update Password</Button>
                   </CardContent>
                 </Card>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

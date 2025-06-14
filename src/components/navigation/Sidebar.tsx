@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -45,7 +44,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -53,7 +52,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 md:w-64",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -70,7 +69,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="md:hidden min-w-[44px] min-h-[44px]"
+            className="lg:hidden"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -86,16 +85,15 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   key={item.name}
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
-                    "w-full justify-start text-left font-normal min-h-[48px] rounded-xl",
+                    "w-full justify-start text-left font-normal",
                     isActive
                       ? "bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   )}
                   asChild
-                  onClick={() => onClose()}
                 >
                   <Link to={item.href}>
-                    <Icon className="mr-3 h-5 w-5" />
+                    <Icon className="mr-3 h-4 w-4" />
                     {item.name}
                     {isActive && (
                       <ChevronRight className="ml-auto h-4 w-4" />
