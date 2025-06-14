@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
@@ -5,18 +6,33 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Plus, Phone, Mail, MapPin, Clock, Edit } from "lucide-react";
 import { HelpButton } from "@/components/tutorial/HelpButton";
 import { PresenceIndicator } from "@/components/collaboration/PresenceIndicator";
 import { useTutorialContext } from "@/components/tutorial/TutorialProvider";
 import { useCollaborationContext } from "@/components/collaboration/CollaborationProvider";
+import { EditWorkerDialog } from "@/components/workforce/EditWorkerDialog";
+
+interface Worker {
+  id: number;
+  name: string;
+  role: string;
+  email: string;
+  phone: string;
+  site: string;
+  status: string;
+  lastSeen: string;
+  avatar: string;
+}
 
 const Workforce = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { openVideo } = useTutorialContext();
   const { activeUsers } = useCollaborationContext();
 
-  const workers = [
+  const [workers, setWorkers] = useState<Worker[]>([
     {
       id: 1,
       name: "John Smith",
@@ -61,7 +77,7 @@ const Workforce = () => {
       lastSeen: "1 day ago",
       avatar: "LC",
     },
-  ];
+  ]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,6 +88,20 @@ const Workforce = () => {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const handleEditWorker = (worker: Worker) => {
+    setEditingWorker(worker);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveWorker = (updatedWorker: Worker) => {
+    setWorkers(workers.map(w => w.id === updatedWorker.id ? updatedWorker : w));
+  };
+
+  const handleCloseEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setEditingWorker(null);
   };
 
   return (
@@ -130,9 +160,19 @@ const Workforce = () => {
                           </p>
                         </div>
                       </div>
-                      <Badge className={getStatusColor(worker.status)}>
-                        {worker.status}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getStatusColor(worker.status)}>
+                          {worker.status}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditWorker(worker)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -164,6 +204,13 @@ const Workforce = () => {
           </div>
         </main>
       </div>
+
+      <EditWorkerDialog
+        worker={editingWorker}
+        isOpen={isEditDialogOpen}
+        onClose={handleCloseEditDialog}
+        onSave={handleSaveWorker}
+      />
     </div>
   );
 };
