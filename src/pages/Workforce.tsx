@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
@@ -7,9 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { HelpButton } from "@/components/tutorial/HelpButton";
+import { PresenceIndicator } from "@/components/collaboration/PresenceIndicator";
+import { useTutorialContext } from "@/components/tutorial/TutorialProvider";
+import { useCollaborationContext } from "@/components/collaboration/CollaborationProvider";
 
 const Workforce = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { openVideo } = useTutorialContext();
+  const { activeUsers } = useCollaborationContext();
 
   const workers = [
     {
@@ -79,14 +84,27 @@ const Workforce = () => {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6 py-8">
             <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Workforce
-                </h1>
+              <div className="flex-1">
+                <div className="flex items-center gap-4 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    Workforce
+                  </h1>
+                  <HelpButton
+                    videoId="manage-workforce"
+                    onVideoOpen={openVideo}
+                    size="sm"
+                  />
+                </div>
                 <p className="text-gray-600 dark:text-gray-400">
                   Manage your construction team and track their activity.
                 </p>
+                
+                {/* Presence Indicator */}
+                <div className="mt-4">
+                  <PresenceIndicator users={activeUsers} />
+                </div>
               </div>
+              
               <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Worker
