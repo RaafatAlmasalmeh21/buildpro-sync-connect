@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { VideoLibrary } from "@/components/tutorial/VideoLibrary";
 import { VideoPanel } from "@/components/tutorial/VideoPanel";
 import { useTutorial } from "@/hooks/useTutorial";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Play, Clock, Search, BookOpen } from "lucide-react";
+import { Play, Clock, Search, BookOpen, Upload } from "lucide-react";
 import { tutorialService } from "@/services/tutorialService";
 import { TutorialVideo } from "@/types/tutorial";
+import { toast } from "@/hooks/use-toast";
 
 const Tutorial = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,6 +41,17 @@ const Tutorial = () => {
     openVideo(video.id);
   };
 
+  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // For now, just show a toast message
+      toast({
+        title: "Video Upload",
+        description: `Selected: ${file.name}. Upload functionality coming soon!`,
+      });
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -51,11 +62,29 @@ const Tutorial = () => {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6 py-8">
             <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <BookOpen className="h-8 w-8 text-blue-600" />
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Tutorial Library
-                </h1>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <BookOpen className="h-8 w-8 text-blue-600" />
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    Tutorial Library
+                  </h1>
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    style={{ display: 'none' }}
+                    id="video-upload"
+                  />
+                  <Button
+                    onClick={() => document.getElementById('video-upload')?.click()}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload Video
+                  </Button>
+                </div>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
                 Learn how to use BuildPro with our comprehensive video tutorials
