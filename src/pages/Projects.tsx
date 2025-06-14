@@ -8,12 +8,13 @@ import { ProjectsGantt } from "@/components/projects/ProjectsGantt";
 import { ProjectsFilters } from "@/components/projects/ProjectsFilters";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectDetailPanel } from "@/components/projects/ProjectDetailPanel";
+import { NewProjectDialog } from "@/components/projects/NewProjectDialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Grid3X3, List, BarChart3 } from "lucide-react";
 
 // Enhanced sample data
-const sampleProjects = [
+const initialProjects = [
   {
     id: 1,
     name: "Downtown Office Complex",
@@ -83,7 +84,8 @@ const sampleProjects = [
 
 const Projects = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<typeof sampleProjects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<typeof initialProjects[0] | null>(null);
+  const [projects, setProjects] = useState(initialProjects);
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,7 +94,7 @@ const Projects = () => {
   const [startDateTo, setStartDateTo] = useState<Date | undefined>();
 
   // Filter projects
-  const filteredProjects = sampleProjects.filter((project) => {
+  const filteredProjects = projects.filter((project) => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.client.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || project.status === statusFilter;
@@ -116,6 +118,10 @@ const Projects = () => {
     setStartDateTo(undefined);
   };
 
+  const handleProjectCreate = (newProject: any) => {
+    setProjects(prev => [...prev, newProject]);
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
@@ -134,10 +140,7 @@ const Projects = () => {
                   Manage your construction projects and track progress.
                 </p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                New Project
-              </Button>
+              <NewProjectDialog onProjectCreate={handleProjectCreate} />
             </div>
 
             {/* Filters */}
