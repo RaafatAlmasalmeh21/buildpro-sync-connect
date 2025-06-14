@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TutorialProvider } from "@/components/tutorial/TutorialProvider";
 import { CollaborationProvider } from "@/components/collaboration/CollaborationProvider";
+import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
+import { BottomNavigation } from "@/components/navigation/BottomNavigation";
 import Index from "./pages/Index";
 import Projects from "./pages/Projects";
 import Sites from "./pages/Sites";
@@ -25,24 +27,29 @@ const App = () => (
     <TooltipProvider>
       <CollaborationProvider>
         <TutorialProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/sites" element={<Sites />} />
-              <Route path="/workforce" element={<Workforce />} />
-              <Route path="/equipment" element={<Equipment />} />
-              <Route path="/timesheets" element={<Timesheets />} />
-              <Route path="/safety" element={<Safety />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/documents" element={<Documents />} />
-              <Route path="/settings" element={<Settings />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <OnboardingProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="min-h-screen pb-16 md:pb-0">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/sites" element={<Sites />} />
+                  <Route path="/workforce" element={<Workforce />} />
+                  <Route path="/equipment" element={<Equipment />} />
+                  <Route path="/timesheets" element={<Timesheets />} />
+                  <Route path="/safety" element={<Safety />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/documents" element={<Documents />} />
+                  <Route path="/settings" element={<Settings />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <BottomNavigation />
+              </div>
+            </BrowserRouter>
+          </OnboardingProvider>
         </TutorialProvider>
       </CollaborationProvider>
     </TooltipProvider>
