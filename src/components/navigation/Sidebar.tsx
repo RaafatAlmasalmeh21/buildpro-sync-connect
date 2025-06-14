@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,16 +19,16 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home, current: true },
-  { name: "Projects", href: "/projects", icon: Calendar, current: false },
-  { name: "Sites", href: "/sites", icon: MapPin, current: false },
-  { name: "Workforce", href: "/workforce", icon: Users, current: false },
-  { name: "Equipment", href: "/equipment", icon: Wrench, current: false },
-  { name: "Timesheets", href: "/timesheets", icon: Clock, current: false },
-  { name: "Safety", href: "/safety", icon: Shield, current: false },
-  { name: "Reports", href: "/reports", icon: BarChart3, current: false },
-  { name: "Documents", href: "/documents", icon: FileText, current: false },
-  { name: "Settings", href: "/settings", icon: Settings, current: false },
+  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Projects", href: "/projects", icon: Calendar },
+  { name: "Sites", href: "/sites", icon: MapPin },
+  { name: "Workforce", href: "/workforce", icon: Users },
+  { name: "Equipment", href: "/equipment", icon: Wrench },
+  { name: "Timesheets", href: "/timesheets", icon: Clock },
+  { name: "Safety", href: "/safety", icon: Shield },
+  { name: "Reports", href: "/reports", icon: BarChart3 },
+  { name: "Documents", href: "/documents", icon: FileText },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 interface SidebarProps {
@@ -37,6 +37,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+  const location = useLocation();
+
   return (
     <>
       {/* Mobile overlay */}
@@ -77,22 +79,26 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           <nav className="px-4 py-6 space-y-2">
             {navigation.map((item) => {
               const Icon = item.icon;
+              const isActive = location.pathname === item.href;
               return (
                 <Button
                   key={item.name}
-                  variant={item.current ? "secondary" : "ghost"}
+                  variant={isActive ? "secondary" : "ghost"}
                   className={cn(
                     "w-full justify-start text-left font-normal",
-                    item.current
+                    isActive
                       ? "bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   )}
+                  asChild
                 >
-                  <Icon className="mr-3 h-4 w-4" />
-                  {item.name}
-                  {item.current && (
-                    <ChevronRight className="ml-auto h-4 w-4" />
-                  )}
+                  <Link to={item.href}>
+                    <Icon className="mr-3 h-4 w-4" />
+                    {item.name}
+                    {isActive && (
+                      <ChevronRight className="ml-auto h-4 w-4" />
+                    )}
+                  </Link>
                 </Button>
               );
             })}
