@@ -1,0 +1,74 @@
+
+/* Mobile-first responsive utilities */
+@layer utilities {
+  /* Touch-friendly minimum sizes */
+  .touch-target {
+    @apply min-w-[44px] min-h-[44px];
+  }
+  
+  /* Mobile card styling */
+  .mobile-card {
+    @apply rounded-2xl shadow-sm border bg-white dark:bg-gray-800;
+  }
+  
+  /* Safe area handling */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Mobile typography scale */
+  .text-mobile-xs { font-size: 0.75rem; line-height: 1rem; }
+  .text-mobile-sm { font-size: 0.875rem; line-height: 1.25rem; }
+  .text-mobile-base { font-size: 1rem; line-height: 1.5rem; }
+  .text-mobile-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .text-mobile-xl { font-size: 1.25rem; line-height: 1.75rem; }
+  .text-mobile-2xl { font-size: 1.5rem; line-height: 2rem; }
+  
+  /* Mobile spacing scale */
+  .space-mobile-xs { @apply space-y-2; }
+  .space-mobile-sm { @apply space-y-3; }
+  .space-mobile-md { @apply space-y-4; }
+  .space-mobile-lg { @apply space-y-6; }
+  
+  /* Pull-to-refresh indicator */
+  .pull-refresh {
+    @apply relative overflow-hidden;
+  }
+  
+  .pull-refresh::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1 bg-blue-500 transform -translate-y-full transition-transform duration-200;
+  }
+  
+  .pull-refresh.refreshing::before {
+    @apply translate-y-0;
+  }
+}
+
+/* Mobile-specific component overrides */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+  
+  /* Ensure buttons are touch-friendly */
+  .btn, button {
+    @apply touch-target;
+  }
+  
+  /* Mobile input styling */
+  input, select, textarea {
+    @apply text-base; /* Prevents zoom on iOS */
+    @apply rounded-2xl;
+    @apply min-h-[48px];
+  }
+  
+  /* Mobile modal adjustments */
+  .modal {
+    @apply m-4 max-h-[90vh] rounded-2xl;
+  }
+}

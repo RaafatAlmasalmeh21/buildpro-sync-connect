@@ -1,7 +1,9 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
+import { MobileHeader } from "@/components/navigation/MobileHeader";
+import { MobileBottomTabs } from "@/components/navigation/MobileBottomTabs";
+import { MobileProjectsList } from "@/components/mobile/MobileProjectsList";
 import { ProjectsList } from "@/components/projects/ProjectsList";
 import { ProjectsKanban } from "@/components/projects/ProjectsKanban";
 import { ProjectsGantt } from "@/components/projects/ProjectsGantt";
@@ -123,103 +125,113 @@ const Projects = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Projects
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Manage your construction projects and track progress.
-                </p>
-              </div>
-              <NewProjectDialog onProjectCreate={handleProjectCreate} />
-            </div>
-
-            {/* Filters */}
-            <ProjectsFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              statusFilter={statusFilter}
-              onStatusChange={setStatusFilter}
-              startDateFrom={startDateFrom}
-              startDateTo={startDateTo}
-              onStartDateFromChange={setStartDateFrom}
-              onStartDateToChange={setStartDateTo}
-              onClearFilters={handleClearFilters}
-              activeFiltersCount={activeFiltersCount}
-            />
-
-            <Tabs defaultValue="grid" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 lg:w-96">
-                <TabsTrigger value="grid" className="flex items-center gap-2">
-                  <Grid3X3 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Grid</span>
-                </TabsTrigger>
-                <TabsTrigger value="list" className="flex items-center gap-2">
-                  <List className="h-4 w-4" />
-                  <span className="hidden sm:inline">List</span>
-                </TabsTrigger>
-                <TabsTrigger value="kanban" className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Kanban</span>
-                </TabsTrigger>
-                <TabsTrigger value="gantt" className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Gantt</span>
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="grid" className="mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {filteredProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      onViewDetails={setSelectedProject}
-                    />
-                  ))}
-                </div>
-                {filteredProjects.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400">
-                      No projects found matching your filters.
-                    </p>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="list" className="mt-6">
-                <ProjectsList />
-              </TabsContent>
-              
-              <TabsContent value="kanban" className="mt-6">
-                <ProjectsKanban />
-              </TabsContent>
-              
-              <TabsContent value="gantt" className="mt-6">
-                <ProjectsGantt />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
+    <>
+      {/* Mobile Layout */}
+      <div className="md:hidden min-h-screen bg-gray-50 dark:bg-gray-900">
+        <MobileHeader title="Projects" />
+        <MobileProjectsList />
+        <MobileBottomTabs />
       </div>
 
-      {/* Detail Panel */}
-      {selectedProject && (
-        <ProjectDetailPanel
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-        />
-      )}
-    </div>
+      {/* Desktop Layout */}
+      <div className="hidden md:flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+          
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div className="container mx-auto px-6 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Projects
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Manage your construction projects and track progress.
+                  </p>
+                </div>
+                <NewProjectDialog onProjectCreate={handleProjectCreate} />
+              </div>
+
+              {/* Filters */}
+              <ProjectsFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                statusFilter={statusFilter}
+                onStatusChange={setStatusFilter}
+                startDateFrom={startDateFrom}
+                startDateTo={startDateTo}
+                onStartDateFromChange={setStartDateFrom}
+                onStartDateToChange={setStartDateTo}
+                onClearFilters={handleClearFilters}
+                activeFiltersCount={activeFiltersCount}
+              />
+
+              <Tabs defaultValue="grid" className="w-full">
+                <TabsList className="grid w-full grid-cols-4 lg:w-96">
+                  <TabsTrigger value="grid" className="flex items-center gap-2">
+                    <Grid3X3 className="h-4 w-4" />
+                    <span className="hidden sm:inline">Grid</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="list" className="flex items-center gap-2">
+                    <List className="h-4 w-4" />
+                    <span className="hidden sm:inline">List</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="kanban" className="flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4" />
+                    <span className="hidden sm:inline">Kanban</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="gantt" className="flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4" />
+                    <span className="hidden sm:inline">Gantt</span>
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="grid" className="mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredProjects.map((project) => (
+                      <ProjectCard
+                        key={project.id}
+                        project={project}
+                        onViewDetails={setSelectedProject}
+                      />
+                    ))}
+                  </div>
+                  {filteredProjects.length === 0 && (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No projects found matching your filters.
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
+                
+                <TabsContent value="list" className="mt-6">
+                  <ProjectsList />
+                </TabsContent>
+                
+                <TabsContent value="kanban" className="mt-6">
+                  <ProjectsKanban />
+                </TabsContent>
+                
+                <TabsContent value="gantt" className="mt-6">
+                  <ProjectsGantt />
+                </TabsContent>
+              </Tabs>
+            </div>
+          </main>
+        </div>
+
+        {/* Detail Panel */}
+        {selectedProject && (
+          <ProjectDetailPanel
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
+        )}
+      </div>
+    </>
   );
 };
 
