@@ -1,7 +1,9 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
+import { MobileHeader } from "@/components/navigation/MobileHeader";
+import { MobileBottomTabs } from "@/components/navigation/MobileBottomTabs";
+import MobileSafety from "@/components/mobile/MobileSafety";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -93,118 +95,130 @@ const Safety = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Safety Centre
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Manage safety incidents, training, and compliance.
-                </p>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Training
-                </Button>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Report Incident
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Incidents */}
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Recent Incidents
-                </h2>
-                <div className="space-y-4">
-                  {incidents.map((incident) => (
-                    <Card key={incident.id} className="bg-white dark:bg-gray-800">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                            {incident.title}
-                          </CardTitle>
-                          <div className="flex space-x-2">
-                            <Badge className={getSeverityColor(incident.severity)}>
-                              {incident.severity}
-                            </Badge>
-                            <Badge className={getStatusColor(incident.status)}>
-                              {incident.status}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <Shield className="h-4 w-4 mr-2" />
-                            <span>{incident.site}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <AlertTriangle className="h-4 w-4 mr-2" />
-                            <span>Reported by {incident.reportedBy}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <span>{new Date(incident.date).toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Training Sessions */}
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Upcoming Training
-                </h2>
-                <div className="space-y-4">
-                  {trainingSessions.map((session) => (
-                    <Card key={session.id} className="bg-white dark:bg-gray-800">
-                      <CardHeader>
-                        <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {session.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <span>{new Date(session.date).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <FileText className="h-4 w-4 mr-2" />
-                            <span>{session.duration}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <Shield className="h-4 w-4 mr-2" />
-                            <span>{session.attendees} attendees</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+    <>
+      {/* Mobile Layout */}
+      <div className="md:hidden min-h-screen bg-gray-50 dark:bg-gray-900">
+        <MobileHeader title="Safety" />
+        <div className="p-4">
+          <MobileSafety />
+        </div>
+        <MobileBottomTabs />
       </div>
-    </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+          
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div className="container mx-auto px-6 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Safety Centre
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Manage safety incidents, training, and compliance.
+                  </p>
+                </div>
+                <div className="flex space-x-2">
+                  <Button variant="outline">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Training
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Report Incident
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Incidents */}
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Recent Incidents
+                  </h2>
+                  <div className="space-y-4">
+                    {incidents.map((incident) => (
+                      <Card key={incident.id} className="bg-white dark:bg-gray-800">
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {incident.title}
+                            </CardTitle>
+                            <div className="flex space-x-2">
+                              <Badge className={getSeverityColor(incident.severity)}>
+                                {incident.severity}
+                              </Badge>
+                              <Badge className={getStatusColor(incident.status)}>
+                                {incident.status}
+                              </Badge>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <Shield className="h-4 w-4 mr-2" />
+                              <span>{incident.site}</span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <AlertTriangle className="h-4 w-4 mr-2" />
+                              <span>Reported by {incident.reportedBy}</span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              <span>{new Date(incident.date).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Training Sessions */}
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Upcoming Training
+                  </h2>
+                  <div className="space-y-4">
+                    {trainingSessions.map((session) => (
+                      <Card key={session.id} className="bg-white dark:bg-gray-800">
+                        <CardHeader>
+                          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {session.title}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              <span>{new Date(session.date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <FileText className="h-4 w-4 mr-2" />
+                              <span>{session.duration}</span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                              <Shield className="h-4 w-4 mr-2" />
+                              <span>{session.attendees} attendees</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
   );
 };
 

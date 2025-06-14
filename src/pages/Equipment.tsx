@@ -1,7 +1,9 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
+import { MobileHeader } from "@/components/navigation/MobileHeader";
+import { MobileBottomTabs } from "@/components/navigation/MobileBottomTabs";
+import MobileEquipment from "@/components/mobile/MobileEquipment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,80 +86,92 @@ const Equipment = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Equipment
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Track and manage construction equipment and machinery.
-                </p>
-              </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Equipment
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {equipment.map((item) => (
-                <Card key={item.id} className="bg-white dark:bg-gray-800">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {item.name}
-                        </CardTitle>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {item.assetTag} • {item.type}
-                        </p>
-                      </div>
-                      <Badge className={getStatusColor(item.status)}>
-                        {item.status.replace('_', ' ')}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span>{item.location}</span>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          <span>Service: {new Date(item.nextService).toLocaleDateString()}</span>
-                        </div>
-                        {new Date(item.nextService) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) && (
-                          <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center text-sm">
-                        <Wrench className="h-4 w-4 mr-2 text-gray-400" />
-                        <span className="text-gray-600 dark:text-gray-400 mr-2">Condition:</span>
-                        <span className={`font-medium capitalize ${getConditionColor(item.condition)}`}>
-                          {item.condition}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </main>
+    <>
+      {/* Mobile Layout */}
+      <div className="md:hidden min-h-screen bg-gray-50 dark:bg-gray-900">
+        <MobileHeader title="Equipment" />
+        <div className="p-4">
+          <MobileEquipment />
+        </div>
+        <MobileBottomTabs />
       </div>
-    </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+          
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div className="container mx-auto px-6 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Equipment
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Track and manage construction equipment and machinery.
+                  </p>
+                </div>
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Equipment
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {equipment.map((item) => (
+                  <Card key={item.id} className="bg-white dark:bg-gray-800">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {item.name}
+                          </CardTitle>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {item.assetTag} • {item.type}
+                          </p>
+                        </div>
+                        <Badge className={getStatusColor(item.status)}>
+                          {item.status.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span>{item.location}</span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            <span>Service: {new Date(item.nextService).toLocaleDateString()}</span>
+                          </div>
+                          {new Date(item.nextService) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) && (
+                            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center text-sm">
+                          <Wrench className="h-4 w-4 mr-2 text-gray-400" />
+                          <span className="text-gray-600 dark:text-gray-400 mr-2">Condition:</span>
+                          <span className={`font-medium capitalize ${getConditionColor(item.condition)}`}>
+                            {item.condition}
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
   );
 };
 

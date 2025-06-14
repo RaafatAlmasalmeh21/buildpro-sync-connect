@@ -1,7 +1,9 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
+import { MobileHeader } from "@/components/navigation/MobileHeader";
+import { MobileBottomTabs } from "@/components/navigation/MobileBottomTabs";
+import MobileTimesheets from "@/components/mobile/MobileTimesheets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,77 +73,89 @@ const Timesheets = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Timesheets
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Track and manage worker time logs and attendance.
-                </p>
-              </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Manual Entry
-              </Button>
-            </div>
-
-            <div className="space-y-6">
-              {timesheets.map((timesheet) => (
-                <Card key={timesheet.id} className="bg-white dark:bg-gray-800">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {timesheet.worker}
-                        </CardTitle>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {timesheet.task}
-                        </p>
-                      </div>
-                      <Badge className={getStatusColor(timesheet.status)}>
-                        {timesheet.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span>{new Date(timesheet.date).toLocaleDateString()}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <Clock className="h-4 w-4 mr-2" />
-                        <span>{timesheet.checkIn} - {timesheet.checkOut}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <User className="h-4 w-4 mr-2" />
-                        <span>{timesheet.totalHours} hours</span>
-                      </div>
-                      
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span>{timesheet.site}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </main>
+    <>
+      {/* Mobile Layout */}
+      <div className="md:hidden min-h-screen bg-gray-50 dark:bg-gray-900">
+        <MobileHeader title="Timesheets" />
+        <div className="p-4">
+          <MobileTimesheets />
+        </div>
+        <MobileBottomTabs />
       </div>
-    </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:flex h-screen bg-gray-50 dark:bg-gray-900">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
+          
+          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
+            <div className="container mx-auto px-6 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Timesheets
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Track and manage worker time logs and attendance.
+                  </p>
+                </div>
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Manual Entry
+                </Button>
+              </div>
+
+              <div className="space-y-6">
+                {timesheets.map((timesheet) => (
+                  <Card key={timesheet.id} className="bg-white dark:bg-gray-800">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {timesheet.worker}
+                          </CardTitle>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {timesheet.task}
+                          </p>
+                        </div>
+                        <Badge className={getStatusColor(timesheet.status)}>
+                          {timesheet.status}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          <span>{new Date(timesheet.date).toLocaleDateString()}</span>
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <Clock className="h-4 w-4 mr-2" />
+                          <span>{timesheet.checkIn} - {timesheet.checkOut}</span>
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <User className="h-4 w-4 mr-2" />
+                          <span>{timesheet.totalHours} hours</span>
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span>{timesheet.site}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
   );
 };
 
