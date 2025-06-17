@@ -6,12 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, Phone, Mail, MapPin, Clock, Edit } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Edit } from "lucide-react";
 import { HelpButton } from "@/components/tutorial/HelpButton";
 import { PresenceIndicator } from "@/components/collaboration/PresenceIndicator";
 import { useTutorialContext } from "@/components/tutorial/TutorialProvider";
 import { useCollaborationContext } from "@/components/collaboration/CollaborationProvider";
 import { EditWorkerDialog } from "@/components/workforce/EditWorkerDialog";
+import { AddWorkerDialog } from "@/components/workforce/AddWorkerDialog";
 
 interface Worker {
   id: number;
@@ -95,6 +96,10 @@ const Workforce = () => {
     setIsEditDialogOpen(true);
   };
 
+  const handleAddWorker = (newWorker: Worker) => {
+    setWorkers([...workers, newWorker]);
+  };
+
   const handleSaveWorker = (updatedWorker: Worker) => {
     setWorkers(workers.map(w => w.id === updatedWorker.id ? updatedWorker : w));
   };
@@ -135,10 +140,7 @@ const Workforce = () => {
                 </div>
               </div>
               
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Worker
-              </Button>
+              <AddWorkerDialog onAdd={handleAddWorker} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
