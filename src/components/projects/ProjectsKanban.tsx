@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { MapPin, Users, Calendar } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const columns = [
   { id: "planned", title: "Planned", color: "bg-blue-100 dark:bg-blue-900" },
@@ -84,11 +85,19 @@ export const ProjectsKanban = () => {
   const [projects, setProjects] = useState(initialProjects);
   const [draggedProject, setDraggedProject] = useState<number | null>(null);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleMouseDown = (projectId: number) => {
     const timer = setTimeout(() => {
       setDraggedProject(projectId);
-    }, 500); // 500ms long press
+      setIsDragging(true);
+      // Add haptic feedback for mobile
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 300); // Reduced to 300ms for faster response
     setLongPressTimer(timer);
   };
 
@@ -108,31 +117,57 @@ export const ProjectsKanban = () => {
 
   const handleDragStart = (e: React.DragEvent, projectId: number) => {
     setDraggedProject(projectId);
+    setIsDragging(true);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', ''); // For better browser compatibility
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    setDragOverColumn(columnId);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear if we're leaving the column completely
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverColumn(null);
+    }
   };
 
   const handleDrop = (e: React.DragEvent, newStatus: string) => {
     e.preventDefault();
+    setDragOverColumn(null);
     
     if (draggedProject !== null) {
-      setProjects(prevProjects => 
-        prevProjects.map(project => 
-          project.id === draggedProject 
-            ? { ...project, status: newStatus }
-            : project
-        )
-      );
+      const project = projects.find(p => p.id === draggedProject);
+      const oldStatus = project?.status;
+      
+      if (oldStatus !== newStatus) {
+        setProjects(prevProjects => 
+          prevProjects.map(project => 
+            project.id === draggedProject 
+              ? { ...project, status: newStatus }
+              : project
+          )
+        );
+        
+        // Show success toast
+        toast({
+          title: "Project moved",
+          description: `"${project?.name}" moved to ${columns.find(c => c.id === newStatus)?.title}`,
+        });
+      }
+      
       setDraggedProject(null);
+      setIsDragging(false);
     }
   };
 
   const handleDragEnd = () => {
     setDraggedProject(null);
+    setIsDragging(false);
+    setDragOverColumn(null);
   };
 
   return (
@@ -140,11 +175,16 @@ export const ProjectsKanban = () => {
       {columns.map((column) => (
         <div 
           key={column.id} 
-          className="space-y-4"
-          onDragOver={handleDragOver}
+          className={`space-y-4 transition-all duration-200 ${
+            dragOverColumn === column.id ? 'scale-105 ring-2 ring-blue-400 ring-opacity-50' : ''
+          }`}
+          onDragOver={(e) => handleDragOver(e, column.id)}
+          onDragLeave={handleDragLeave}
           onDrop={(e) => handleDrop(e, column.id)}
         >
-          <div className={`p-3 rounded-lg ${column.color}`}>
+          <div className={`p-3 rounded-lg transition-all duration-200 ${column.color} ${
+            dragOverColumn === column.id ? 'shadow-lg' : ''
+          }`}>
             <h3 className="font-semibold text-gray-900 dark:text-white">
               {column.title}
             </h3>
@@ -153,14 +193,20 @@ export const ProjectsKanban = () => {
             </p>
           </div>
           
-          <div className="space-y-3 min-h-[200px]">
+          <div className={`space-y-3 min-h-[200px] transition-all duration-200 ${
+            dragOverColumn === column.id ? 'bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2' : ''
+          }`}>
             {projects
               .filter(project => project.status === column.id)
               .map(project => (
                 <Card 
                   key={project.id} 
-                  className={`bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-200 select-none ${
-                    draggedProject === project.id ? 'opacity-50 scale-105 shadow-lg' : ''
+                  className={`bg-white dark:bg-gray-800 cursor-pointer transition-all duration-300 ease-out select-none ${
+                    draggedProject === project.id 
+                      ? 'opacity-70 scale-105 shadow-2xl rotate-3 z-50 border-2 border-blue-400' 
+                      : 'hover:shadow-md hover:scale-[1.02]'
+                  } ${
+                    isDragging && draggedProject !== project.id ? 'pointer-events-none opacity-60' : ''
                   }`}
                   draggable={draggedProject === project.id}
                   onDragStart={(e) => handleDragStart(e, project.id)}
@@ -170,6 +216,9 @@ export const ProjectsKanban = () => {
                   onMouseLeave={handleMouseLeave}
                   onTouchStart={() => handleMouseDown(project.id)}
                   onTouchEnd={handleMouseUp}
+                  style={{
+                    transform: draggedProject === project.id ? 'translateZ(0)' : undefined,
+                  }}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
