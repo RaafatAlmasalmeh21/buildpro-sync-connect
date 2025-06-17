@@ -1,4 +1,5 @@
 import { useState } from "react";
+import i18n from "@/lib/i18n";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +15,15 @@ import { Settings as SettingsIcon, User, Bell, Shield, Globe, Palette } from "lu
 const Settings = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("profile");
-  const [selectedLanguage, setSelectedLanguage] = useState("english");
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    localStorage.getItem("language") || "en"
+  );
+
+  const handleLanguageChange = (lang: string) => {
+    setSelectedLanguage(lang);
+    localStorage.setItem("language", lang);
+    i18n.changeLanguage(lang);
+  };
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -156,16 +165,16 @@ const Settings = () => {
             <CardContent className="space-y-6">
               <div>
                 <Label htmlFor="language">Language</Label>
-                <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                <Select value={selectedLanguage} onValueChange={handleLanguageChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a language" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="english">English</SelectItem>
-                    <SelectItem value="arabic">العربية (Arabic)</SelectItem>
-                    <SelectItem value="spanish">Español (Spanish)</SelectItem>
-                    <SelectItem value="french">Français (French)</SelectItem>
-                    <SelectItem value="german">Deutsch (German)</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="ar">العربية (Arabic)</SelectItem>
+                    <SelectItem value="es">Español (Spanish)</SelectItem>
+                    <SelectItem value="fr">Français (French)</SelectItem>
+                    <SelectItem value="de">Deutsch (German)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
