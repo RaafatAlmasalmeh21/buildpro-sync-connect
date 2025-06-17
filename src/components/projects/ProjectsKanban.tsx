@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { MapPin, Users, Calendar } from "lucide-react";
+import { useState } from "react";
 
 const columns = [
   { id: "planned", title: "Planned", color: "bg-blue-100 dark:bg-blue-900" },
@@ -11,7 +12,7 @@ const columns = [
   { id: "closed", title: "Completed", color: "bg-gray-100 dark:bg-gray-900" },
 ];
 
-const projects = [
+const initialProjects = [
   {
     id: 1,
     name: "Downtown Office Complex",
@@ -80,10 +81,69 @@ const getStatusColor = (status: string) => {
 };
 
 export const ProjectsKanban = () => {
+  const [projects, setProjects] = useState(initialProjects);
+  const [draggedProject, setDraggedProject] = useState<number | null>(null);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const handleMouseDown = (projectId: number) => {
+    const timer = setTimeout(() => {
+      setDraggedProject(projectId);
+    }, 500); // 500ms long press
+    setLongPressTimer(timer);
+  };
+
+  const handleMouseUp = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent, projectId: number) => {
+    setDraggedProject(projectId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, newStatus: string) => {
+    e.preventDefault();
+    
+    if (draggedProject !== null) {
+      setProjects(prevProjects => 
+        prevProjects.map(project => 
+          project.id === draggedProject 
+            ? { ...project, status: newStatus }
+            : project
+        )
+      );
+      setDraggedProject(null);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedProject(null);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {columns.map((column) => (
-        <div key={column.id} className="space-y-4">
+        <div 
+          key={column.id} 
+          className="space-y-4"
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, column.id)}
+        >
           <div className={`p-3 rounded-lg ${column.color}`}>
             <h3 className="font-semibold text-gray-900 dark:text-white">
               {column.title}
@@ -93,11 +153,24 @@ export const ProjectsKanban = () => {
             </p>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-3 min-h-[200px]">
             {projects
               .filter(project => project.status === column.id)
               .map(project => (
-                <Card key={project.id} className="bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-shadow">
+                <Card 
+                  key={project.id} 
+                  className={`bg-white dark:bg-gray-800 cursor-pointer hover:shadow-md transition-all duration-200 select-none ${
+                    draggedProject === project.id ? 'opacity-50 scale-105 shadow-lg' : ''
+                  }`}
+                  draggable={draggedProject === project.id}
+                  onDragStart={(e) => handleDragStart(e, project.id)}
+                  onDragEnd={handleDragEnd}
+                  onMouseDown={() => handleMouseDown(project.id)}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseLeave}
+                  onTouchStart={() => handleMouseDown(project.id)}
+                  onTouchEnd={handleMouseUp}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-sm font-medium text-gray-900 dark:text-white">
