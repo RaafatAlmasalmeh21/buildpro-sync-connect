@@ -32,7 +32,11 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Create an `.env` file from the provided example and update it as needed.
+cp .env.example .env
+# Be sure to set `VITE_WS_URL` and any other API URLs in this new file.
+
+# Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
