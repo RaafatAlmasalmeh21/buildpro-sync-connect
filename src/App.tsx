@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TutorialProvider } from "@/components/tutorial/TutorialProvider";
 import { CollaborationProvider } from "@/components/collaboration/CollaborationProvider";
+import InstallPrompt from "@/components/InstallPrompt";
 import Index from "./pages/Index";
 import Projects from "./pages/Projects";
 import Sites from "./pages/Sites";
@@ -28,6 +29,7 @@ const App = () => (
         <TutorialProvider>
           <Toaster />
           <Sonner />
+          <InstallPrompt />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
