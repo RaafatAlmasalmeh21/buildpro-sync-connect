@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Play, Clock, Search, BookOpen, Upload } from "lucide-react";
-import { tutorialService } from "@/services/tutorialService";
+import { getVideos } from "@/services/tutorialService";
 import { TutorialVideo } from "@/types/tutorial";
 import { toast } from "@/hooks/use-toast";
 
@@ -31,7 +31,7 @@ const Tutorial = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const result = await tutorialService.getVideos();
+      const result = await getVideos();
       setVideos(result);
       setLoading(false);
     };
