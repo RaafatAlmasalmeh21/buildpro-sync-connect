@@ -12,6 +12,7 @@ import { Play, Clock, Search, BookOpen, Upload } from "lucide-react";
 import { getVideos } from "@/services/tutorialService";
 import { TutorialVideo } from "@/types/tutorial";
 import { toast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
 
 const Tutorial = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,6 +28,7 @@ const Tutorial = () => {
 
   const [videos, setVideos] = useState<TutorialVideo[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -59,14 +61,21 @@ const Tutorial = () => {
     openVideo(video.id);
   };
 
-  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      // For now, just show a toast message
-      toast({
-        title: "Video Upload",
-        description: `Selected: ${file.name}. Upload functionality coming soon!`,
-      });
+    if (!file) return;
+    setUploadProgress(0);
+    try {
+      const video = await tutorialService.uploadVideo(file, setUploadProgress);
+      toast({ title: "Upload complete", description: `${file.name} uploaded` });
+      const result = await tutorialService.getVideos();
+      setVideos(result);
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Upload failed", variant: "destructive" });
+    } finally {
+      setUploadProgress(null);
+      event.target.value = "";
     }
   };
 
@@ -87,7 +96,7 @@ const Tutorial = () => {
                     Tutorial Library
                   </h1>
                 </div>
-                <div>
+                <div className="space-y-2">
                   <input
                     type="file"
                     accept="video/*"
@@ -102,6 +111,9 @@ const Tutorial = () => {
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Video
                   </Button>
+                  {uploadProgress !== null && (
+                    <Progress value={uploadProgress} />
+                  )}
                 </div>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
