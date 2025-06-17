@@ -6,52 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Wrench, Calendar, MapPin, AlertTriangle } from "lucide-react";
+import { equipment } from "@/data/equipment";
 
 const Equipment = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const equipment = [
-    {
-      id: 1,
-      name: "Excavator CAT 320",
-      assetTag: "EQ-001",
-      type: "Heavy Machinery",
-      status: "in_service",
-      location: "Downtown Office Complex",
-      nextService: "2024-07-25",
-      condition: "good",
-    },
-    {
-      id: 2,
-      name: "Concrete Mixer",
-      assetTag: "EQ-002",
-      type: "Mixing Equipment",
-      status: "available",
-      location: "Equipment Yard",
-      nextService: "2024-08-10",
-      condition: "excellent",
-    },
-    {
-      id: 3,
-      name: "Tower Crane TC-5020",
-      assetTag: "EQ-003",
-      type: "Lifting Equipment",
-      status: "in_service",
-      location: "Residential Tower",
-      nextService: "2024-07-20",
-      condition: "fair",
-    },
-    {
-      id: 4,
-      name: "Bulldozer D6",
-      assetTag: "EQ-004",
-      type: "Heavy Machinery",
-      status: "maintenance",
-      location: "Service Center",
-      nextService: "2024-07-15",
-      condition: "poor",
-    },
-  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {

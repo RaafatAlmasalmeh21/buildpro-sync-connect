@@ -6,72 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, FileText, Download, Eye, Folder, Calendar } from "lucide-react";
+import { documents } from "@/data/documents";
 
 const Documents = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const documents = [
-    {
-      id: 1,
-      name: "Project Specifications - Downtown Office",
-      type: "PDF",
-      size: "2.4 MB",
-      project: "Downtown Office Complex",
-      uploadedBy: "John Smith",
-      uploadedAt: "2024-06-10",
-      category: "specifications",
-    },
-    {
-      id: 2,
-      name: "Safety Protocol Manual",
-      type: "PDF",
-      size: "1.8 MB",
-      project: "All Projects",
-      uploadedBy: "Lisa Chen",
-      uploadedAt: "2024-06-08",
-      category: "safety",
-    },
-    {
-      id: 3,
-      name: "Building Plans - Phase 2",
-      type: "DWG",
-      size: "5.2 MB",
-      project: "Residential Tower Phase 2",
-      uploadedBy: "Sarah Wilson",
-      uploadedAt: "2024-06-05",
-      category: "plans",
-    },
-    {
-      id: 4,
-      name: "Material Purchase Order",
-      type: "PDF",
-      size: "0.5 MB",
-      project: "Hospital Extension",
-      uploadedBy: "Mike Johnson",
-      uploadedAt: "2024-06-03",
-      category: "contracts",
-    },
-    {
-      id: 5,
-      name: "Quality Inspection Report",
-      type: "DOCX",
-      size: "1.2 MB",
-      project: "Shopping Mall Renovation",
-      uploadedBy: "Lisa Chen",
-      uploadedAt: "2024-06-01",
-      category: "reports",
-    },
-    {
-      id: 6,
-      name: "Equipment Manual - Excavator",
-      type: "PDF",
-      size: "3.1 MB",
-      project: "Equipment Documentation",
-      uploadedBy: "John Smith",
-      uploadedAt: "2024-05-28",
-      category: "manuals",
-    },
-  ];
 
   const getCategoryColor = (category: string) => {
     switch (category) {
