@@ -2,32 +2,61 @@
 import { TutorialVideo } from "@/types/tutorial";
 
 class TutorialService {
-  async getVideos(): Promise<TutorialVideo[]> {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/tutorials`);
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      return (await response.json()) as TutorialVideo[];
-    } catch (error) {
-      console.error("Failed to fetch tutorial videos", error);
-      return [];
+  private videos: TutorialVideo[] | null = null;
+
+  private loadVideos(): TutorialVideo[] {
+    if (!this.videos) {
+      this.videos = [
+        {
+          id: "dashboard-overview",
+          title: "Dashboard Overview",
+          description: "Overview of the main dashboard features.",
+          videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+          duration: 30,
+          tags: ["dashboard", "overview"],
+          screen: "dashboard"
+        },
+        {
+          id: "manage-workforce",
+          title: "Manage Workforce",
+          description: "Tutorial on managing your workforce.",
+          videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+          duration: 45,
+          tags: ["workforce", "management"],
+          screen: "workforce"
+        }
+      ];
     }
+    return this.videos!;
   }
 
-  async searchVideos(query: string): Promise<TutorialVideo[]> {
-    try {
-      const videos = await this.getVideos();
-      const lowercaseQuery = query.toLowerCase();
-      return videos.filter(video =>
-        video.title.toLowerCase().includes(lowercaseQuery) ||
-        video.description.toLowerCase().includes(lowercaseQuery) ||
-        video.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
-      );
-    } catch (error) {
-      console.error("Failed to search tutorial videos", error);
-      return [];
-    }
+  getAllVideos(): TutorialVideo[] {
+    return this.loadVideos();
+  }
+
+  getVideoById(id: string): TutorialVideo | undefined {
+    return this.loadVideos().find(video => video.id === id);
+  }
+
+  getVideoByContext(screen: string, contextId?: string): TutorialVideo | undefined {
+    return this.loadVideos().find(video => {
+      if (video.screen !== screen) {
+        return false;
+      }
+      if (contextId) {
+        return video.contextId === contextId;
+      }
+      return true;
+    });
+  }
+
+  searchVideos(query: string): TutorialVideo[] {
+    const lowercaseQuery = query.toLowerCase();
+    return this.loadVideos().filter(video =>
+      video.title.toLowerCase().includes(lowercaseQuery) ||
+      video.description.toLowerCase().includes(lowercaseQuery) ||
+      video.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+    );
   }
 }
 
