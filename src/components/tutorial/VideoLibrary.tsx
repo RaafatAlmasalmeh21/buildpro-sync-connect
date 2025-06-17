@@ -1,9 +1,8 @@
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Search, Play, Clock } from "lucide-react";
 import { TutorialVideo } from "@/types/tutorial";
 import { tutorialService } from "@/services/tutorialService";
@@ -17,7 +16,18 @@ interface VideoLibraryProps {
 export const VideoLibrary = ({ isOpen, onClose, onVideoSelect }: VideoLibraryProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const videos = tutorialService.getAllVideos();
+  const [videos, setVideos] = useState<TutorialVideo[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const result = await tutorialService.getVideos();
+      setVideos(result);
+      setLoading(false);
+    };
+    load();
+  }, []);
 
   const allTags = useMemo(() => {
     const tags = new Set<string>();
@@ -83,33 +93,40 @@ export const VideoLibrary = ({ isOpen, onClose, onVideoSelect }: VideoLibraryPro
 
           {/* Video Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto flex-1">
-            {filteredVideos.map(video => (
-              <div
-                key={video.id}
-                className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => handleVideoSelect(video)}
-              >
-                <div className="relative bg-gray-200 rounded aspect-video mb-3 flex items-center justify-center">
-                  <Play className="h-8 w-8 text-gray-500" />
-                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 rounded flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {video.duration}s
+            {loading && (
+              <p className="col-span-full text-center text-sm py-6">Loading videos…</p>
+            )}
+            {!loading && filteredVideos.length === 0 && (
+              <p className="col-span-full text-center text-sm py-6">No tutorials found.</p>
+            )}
+            {!loading &&
+              filteredVideos.map(video => (
+                <div
+                  key={video.id}
+                  className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => handleVideoSelect(video)}
+                >
+                  <div className="relative bg-gray-200 rounded aspect-video mb-3 flex items-center justify-center">
+                    <Play className="h-8 w-8 text-gray-500" />
+                    <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 rounded flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {video.duration}s
+                    </div>
+                  </div>
+                  <h4 className="font-medium text-sm mb-1">{video.title}</h4>
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">{video.description}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {video.tags.slice(0, 2).map(tag => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {video.tags.length > 2 && (
+                      <span className="text-xs text-gray-500">+{video.tags.length - 2}</span>
+                    )}
                   </div>
                 </div>
-                <h4 className="font-medium text-sm mb-1">{video.title}</h4>
-                <p className="text-xs text-gray-600 mb-2 line-clamp-2">{video.description}</p>
-                <div className="flex flex-wrap gap-1">
-                  {video.tags.slice(0, 2).map(tag => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {video.tags.length > 2 && (
-                    <span className="text-xs text-gray-500">+{video.tags.length - 2}</span>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </DialogContent>

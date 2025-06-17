@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { VideoPanel } from "@/components/tutorial/VideoPanel";
@@ -25,17 +25,35 @@ const Tutorial = () => {
     closeVideo,
   } = useTutorial();
 
-  const videos = tutorialService.getAllVideos();
+  const [videos, setVideos] = useState<TutorialVideo[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      const result = await tutorialService.getVideos();
+      setVideos(result);
+      setLoading(false);
+    };
+    load();
+  }, []);
   
-  const categories = ["all", ...Array.from(new Set(videos.map(v => v.screen)))];
+  const categories = useMemo(
+    () => ["all", ...Array.from(new Set(videos.map(v => v.screen)))],
+    [videos]
+  );
   
-  const filteredVideos = videos.filter(video => {
-    const matchesSearch = searchTerm === "" || 
-      video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      video.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || video.screen === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredVideos = useMemo(() => {
+    return videos.filter(video => {
+      const matchesSearch =
+        searchTerm === "" ||
+        video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        video.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "all" || video.screen === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [videos, searchTerm, selectedCategory]);
 
   const handleVideoPlay = (video: TutorialVideo) => {
     openVideo(video.id);
@@ -119,7 +137,11 @@ const Tutorial = () => {
 
             {/* Video Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredVideos.map(video => (
+              {loading && (
+                <p className="col-span-full text-center text-sm py-6">Loading videos…</p>
+              )}
+              {!loading &&
+                filteredVideos.map(video => (
                 <Card key={video.id} className="cursor-pointer hover:shadow-lg transition-shadow">
                   <CardHeader className="pb-2">
                     <div className="relative bg-gray-200 dark:bg-gray-700 rounded aspect-video mb-3 flex items-center justify-center">
@@ -157,7 +179,7 @@ const Tutorial = () => {
               ))}
             </div>
 
-            {filteredVideos.length === 0 && (
+            {!loading && filteredVideos.length === 0 && (
               <div className="text-center py-12">
                 <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
