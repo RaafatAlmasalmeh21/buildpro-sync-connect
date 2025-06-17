@@ -6,39 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Plus, Users, Calendar, Building } from "lucide-react";
+import { sites } from "@/data/sites";
 
 const Sites = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const sites = [
-    {
-      id: 1,
-      name: "Downtown Office Complex - Site A",
-      project: "Downtown Office Complex",
-      address: "123 Business District, Metro City",
-      workers: 24,
-      status: "active",
-      lastActivity: "2 hours ago",
-    },
-    {
-      id: 2,
-      name: "Residential Tower - Ground Floor",
-      project: "Residential Tower Phase 2",
-      address: "456 Urban Avenue, Metro City",
-      workers: 18,
-      status: "active",
-      lastActivity: "30 minutes ago",
-    },
-    {
-      id: 3,
-      name: "Hospital Extension - East Wing",
-      project: "Hospital Extension",
-      address: "789 Medical Center Drive, Metro City",
-      workers: 32,
-      status: "active",
-      lastActivity: "1 hour ago",
-    },
-  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
