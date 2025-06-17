@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +33,7 @@ const Workforce = () => {
   const { openVideo } = useTutorialContext();
   const { activeUsers } = useCollaborationContext();
 
-  const [workers, setWorkers] = useState<Worker[]>([
+  const defaultWorkers: Worker[] = [
     {
       id: 1,
       name: "John Smith",
@@ -78,7 +78,16 @@ const Workforce = () => {
       lastSeen: "1 day ago",
       avatar: "LC",
     },
-  ]);
+  ];
+
+  const [workers, setWorkers] = useState<Worker[]>(() => {
+    const stored = localStorage.getItem("workers");
+    return stored ? JSON.parse(stored) : defaultWorkers;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("workers", JSON.stringify(workers));
+  }, [workers]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
