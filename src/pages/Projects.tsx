@@ -1,5 +1,8 @@
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { listProjects } from "@/services/projectApi";
+import { Project } from "@/types/project";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { ProjectsList } from "@/components/projects/ProjectsList";
@@ -9,15 +12,16 @@ import { ProjectsFilters } from "@/components/projects/ProjectsFilters";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectDetailPanel } from "@/components/projects/ProjectDetailPanel";
 import { NewProjectDialog } from "@/components/projects/NewProjectDialog";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Grid3X3, List, BarChart3 } from "lucide-react";
-import { projects as initialProjects } from "@/data/projects";
+import { Grid3X3, List, BarChart3 } from "lucide-react";
 
 const Projects = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<typeof initialProjects[0] | null>(null);
-  const [projects, setProjects] = useState(initialProjects);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const { data: projects = [], isLoading } = useQuery({
+    queryKey: ["projects"],
+    queryFn: listProjects,
+  });
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,9 +54,9 @@ const Projects = () => {
     setStartDateTo(undefined);
   };
 
-  const handleProjectCreate = (newProject: any) => {
-    setProjects(prev => [...prev, newProject]);
-  };
+  if (isLoading) {
+    return <div className="p-4">Loading...</div>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -72,7 +76,7 @@ const Projects = () => {
                   Manage your construction projects and track progress.
                 </p>
               </div>
-              <NewProjectDialog onProjectCreate={handleProjectCreate} />
+              <NewProjectDialog />
             </div>
 
             {/* Filters */}

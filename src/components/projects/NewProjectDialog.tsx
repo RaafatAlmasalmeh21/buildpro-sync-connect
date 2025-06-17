@@ -1,5 +1,8 @@
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createProject } from "@/services/projectApi";
+import { Project } from "@/types/project";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -64,12 +67,14 @@ const formSchema = z.object({
   status: z.enum(["planned", "active", "closed"]),
 });
 
-interface NewProjectDialogProps {
-  onProjectCreate: (project: any) => void;
-}
-
-export const NewProjectDialog = ({ onProjectCreate }: NewProjectDialogProps) => {
+export const NewProjectDialog = () => {
   const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: createProject,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,7 +89,7 @@ export const NewProjectDialog = ({ onProjectCreate }: NewProjectDialogProps) => 
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const newProject = {
+    const newProject: Project = {
       id: Date.now(), // Simple ID generation for demo
       name: values.name,
       client: values.client,
@@ -99,7 +104,7 @@ export const NewProjectDialog = ({ onProjectCreate }: NewProjectDialogProps) => 
       description: values.description,
     };
 
-    onProjectCreate(newProject);
+    mutation.mutate(newProject);
     form.reset();
     setOpen(false);
   }
