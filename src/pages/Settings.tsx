@@ -10,11 +10,17 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Settings as SettingsIcon, User, Bell, Shield, Globe, Palette } from "lucide-react";
+import { useAuthContext } from "@/components/auth/AuthProvider";
 
 const Settings = () => {
+  const { user, updateProfile } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("profile");
   const [selectedLanguage, setSelectedLanguage] = useState("english");
+  const [firstName, setFirstName] = useState(user?.name.split(" ")[0] || "");
+  const [lastName, setLastName] = useState(user?.name.split(" ")[1] || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [phone, setPhone] = useState("");
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -38,25 +44,25 @@ const Settings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" defaultValue="Admin" />
+                  <Input id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" defaultValue="User" />
+                  <Input id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" defaultValue="admin@demo.com" />
+                <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
               </div>
-              
+
               <div>
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" />
+                <Input id="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
               </div>
-              
-              <Button>Save Changes</Button>
+
+              <Button onClick={() => updateProfile({ name: `${firstName} ${lastName}`, email })}>Save Changes</Button>
             </CardContent>
           </Card>
         );
@@ -260,25 +266,25 @@ const Settings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" defaultValue="Admin" />
+                  <Input id="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" defaultValue="User" />
+                  <Input id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" defaultValue="admin@demo.com" />
+                <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
               </div>
-              
+
               <div>
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" />
+                <Input id="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
               </div>
-              
-              <Button>Save Changes</Button>
+
+              <Button onClick={() => updateProfile({ name: `${firstName} ${lastName}`, email })}>Save Changes</Button>
             </CardContent>
           </Card>
         );
