@@ -1,7 +1,9 @@
 
+import { useState } from "react";
 import { Bell, Menu, Search, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSearchContext } from "@/components/search/SearchProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,9 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
+  const { query, setQuery, results } = useSearchContext();
+  const [showResults, setShowResults] = useState(false);
+
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center justify-between px-6 py-4">
@@ -34,7 +39,28 @@ export const DashboardHeader = ({ onMenuClick }: DashboardHeaderProps) => {
             <Input
               placeholder="Search projects, sites, tasks..."
               className="pl-10 w-80 bg-gray-50 dark:bg-gray-700"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setShowResults(true)}
+              onBlur={() => setTimeout(() => setShowResults(false), 100)}
             />
+            {showResults && query !== "" && (
+              <div className="absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded shadow-lg z-50 max-h-60 overflow-y-auto text-sm">
+                {results.length === 0 && (
+                  <div className="px-3 py-2 text-gray-500">No results found</div>
+                )}
+                {results.map((r) => (
+                  <a
+                    key={`${r.type}-${r.id}`}
+                    href={r.path}
+                    className="block px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="font-medium">{r.name}</span>
+                    <span className="ml-2 text-gray-500">{r.type}</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
