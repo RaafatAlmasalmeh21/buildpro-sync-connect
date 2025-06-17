@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatsGrid } from "@/components/dashboard/StatsGrid";
 import { ProjectsOverview } from "@/components/dashboard/ProjectsOverview";
@@ -12,6 +13,7 @@ import { useTutorialContext } from "@/components/tutorial/TutorialProvider";
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { openVideo, openLibrary } = useTutorialContext();
+  const { t } = useTranslation();
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -24,10 +26,10 @@ const Index = () => {
           <div className="container mx-auto px-6 py-8">
             <div className="mb-8 relative">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Welcome back, Admin
+                {t('welcome_back')}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Here's what's happening with your construction projects today.
+                {t('dashboard_intro')}
               </p>
               
               {/* Contextual Help Button */}
