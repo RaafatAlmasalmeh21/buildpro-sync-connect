@@ -61,3 +61,7 @@ class TutorialService {
 }
 
 export const tutorialService = new TutorialService();
+
+export async function getVideos(): Promise<TutorialVideo[]> {
+  return tutorialService.getAllVideos();
+}

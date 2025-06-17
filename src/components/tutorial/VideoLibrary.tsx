@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Play, Clock } from "lucide-react";
 import { TutorialVideo } from "@/types/tutorial";
-import { tutorialService } from "@/services/tutorialService";
+import { getVideos } from "@/services/tutorialService";
 
 interface VideoLibraryProps {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export const VideoLibrary = ({ isOpen, onClose, onVideoSelect }: VideoLibraryPro
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const result = await tutorialService.getVideos();
+      const result = await getVideos();
       setVideos(result);
       setLoading(false);
     };
