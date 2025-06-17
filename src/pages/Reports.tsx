@@ -5,11 +5,12 @@ import { Sidebar } from "@/components/navigation/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, BarChart3, PieChart, TrendingUp } from "lucide-react";
+import { CustomReportDialog, CustomReportData } from "@/components/reports/CustomReportDialog";
 
 const Reports = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const reports = [
+  const [reports, setReports] = useState([
     {
       id: 1,
       name: "Project Progress Summary",
@@ -58,7 +59,21 @@ const Reports = () => {
       lastGenerated: "2024-06-14",
       icon: FileText,
     },
-  ];
+  ]);
+
+  const handleCreateReport = (data: CustomReportData) => {
+    setReports((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: data.name,
+        description: data.description,
+        type: data.type,
+        lastGenerated: new Date().toISOString(),
+        icon: FileText,
+      },
+    ]);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -78,10 +93,7 @@ const Reports = () => {
                   Generate and download comprehensive project reports.
                 </p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <FileText className="h-4 w-4 mr-2" />
-                Custom Report
-              </Button>
+              <CustomReportDialog onCreate={handleCreateReport} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
