@@ -50,6 +50,49 @@ class TutorialService {
     });
   }
 
+  async getVideos(): Promise<TutorialVideo[]> {
+    return this.loadVideos();
+  }
+
+  async uploadVideo(file: File, onProgress?: (percent: number) => void): Promise<TutorialVideo> {
+    return new Promise((resolve, reject) => {
+      const form = new FormData();
+      form.append('video', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable && onProgress) {
+          onProgress(Math.round((e.loaded / e.total) * 100));
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const res = JSON.parse(xhr.responseText);
+            const video: TutorialVideo = {
+              id: res.id,
+              title: file.name,
+              description: 'Uploaded video',
+              videoUrl: res.url,
+              duration: 0,
+              tags: ['uploaded'],
+              screen: 'uploads'
+            };
+            this.videos = [...this.loadVideos(), video];
+            resolve(video);
+          } catch (err) {
+            reject(err);
+          }
+        } else {
+          reject(new Error('Upload failed'));
+        }
+      };
+      xhr.onerror = () => reject(new Error('Upload failed'));
+      xhr.open('POST', '/api/upload');
+      xhr.send(form);
+    });
+  }
+
   searchVideos(query: string): TutorialVideo[] {
     const lowercaseQuery = query.toLowerCase();
     return this.loadVideos().filter(video =>
