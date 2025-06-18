@@ -1,4 +1,6 @@
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -41,6 +43,7 @@ const getStatusColor = (status: string) => {
 export const ProjectDetailPanel = ({ project: initialProject, onClose, onProjectUpdate }: ProjectDetailPanelProps) => {
   const [project, setProject] = useState(initialProject);
   const [showAssignWorkers, setShowAssignWorkers] = useState(false);
+  const navigate = useNavigate();
 
   const handleAssignWorkers = (workers: AssignedWorker[]) => {
     const updatedProject = {
@@ -50,6 +53,11 @@ export const ProjectDetailPanel = ({ project: initialProject, onClose, onProject
     };
     setProject(updatedProject);
     onProjectUpdate(updatedProject);
+  };
+
+  const handleViewFullDetails = () => {
+    navigate(`/projects/${project.id}`);
+    onClose();
   };
 
   return (
@@ -250,7 +258,7 @@ export const ProjectDetailPanel = ({ project: initialProject, onClose, onProject
 
           {/* Actions */}
           <div className="space-y-2">
-            <Button className="w-full">
+            <Button className="w-full" onClick={handleViewFullDetails}>
               View Full Details
             </Button>
             <Button variant="outline" className="w-full">
