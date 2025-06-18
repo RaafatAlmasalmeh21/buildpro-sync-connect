@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -14,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { AssignedWorker } from "@/types/project";
 
 interface Worker {
   id: number;
@@ -24,13 +24,6 @@ interface Worker {
   site: string;
   status: string;
   avatar: string;
-}
-
-interface AssignedWorker {
-  id: number;
-  name: string;
-  role: string;
-  assignedDate: string;
 }
 
 interface AssignWorkersDialogProps {

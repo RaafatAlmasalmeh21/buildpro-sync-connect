@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
@@ -12,9 +11,10 @@ import { NewProjectDialog } from "@/components/projects/NewProjectDialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Grid3X3, List, BarChart3 } from "lucide-react";
+import { Project } from "@/types/project";
 
 // Enhanced sample data
-const initialProjects = [
+const initialProjects: Project[] = [
   {
     id: 1,
     name: "Downtown Office Complex",
@@ -129,8 +129,8 @@ const initialProjects = [
 
 const Projects = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<typeof initialProjects[0] | null>(null);
-  const [projects, setProjects] = useState(initialProjects);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -165,6 +165,11 @@ const Projects = () => {
 
   const handleProjectCreate = (newProject: any) => {
     setProjects(prev => [...prev, newProject]);
+  };
+
+  const handleProjectUpdate = (updatedProject: Project) => {
+    setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
+    setSelectedProject(updatedProject);
   };
 
   return (
@@ -262,6 +267,7 @@ const Projects = () => {
         <ProjectDetailPanel
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
+          onProjectUpdate={handleProjectUpdate}
         />
       )}
     </div>

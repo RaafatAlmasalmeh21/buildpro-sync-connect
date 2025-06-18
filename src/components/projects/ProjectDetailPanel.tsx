@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar } from "@/components/ui/avatar";
 import { AssignWorkersDialog } from "./AssignWorkersDialog";
+import { Project, AssignedWorker } from "@/types/project";
 import { 
   MapPin, 
   Calendar, 
@@ -19,31 +19,10 @@ import {
   UserPlus
 } from "lucide-react";
 
-interface AssignedWorker {
-  id: number;
-  name: string;
-  role: string;
-  assignedDate: string;
-}
-
-interface Project {
-  id: number;
-  name: string;
-  client: string;
-  progress: number;
-  status: "planned" | "active" | "closed";
-  sites: number;
-  startDate: string;
-  endDate: string;
-  budget: string;
-  teamSize: number;
-  location: string;
-  assignedWorkers?: AssignedWorker[];
-}
-
 interface ProjectDetailPanelProps {
   project: Project;
   onClose: () => void;
+  onProjectUpdate: (project: Project) => void;
 }
 
 const getStatusColor = (status: string) => {
@@ -59,16 +38,18 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const ProjectDetailPanel = ({ project: initialProject, onClose }: ProjectDetailPanelProps) => {
+export const ProjectDetailPanel = ({ project: initialProject, onClose, onProjectUpdate }: ProjectDetailPanelProps) => {
   const [project, setProject] = useState(initialProject);
   const [showAssignWorkers, setShowAssignWorkers] = useState(false);
 
   const handleAssignWorkers = (workers: AssignedWorker[]) => {
-    setProject(prev => ({
-      ...prev,
+    const updatedProject = {
+      ...project,
       assignedWorkers: workers,
       teamSize: workers.length
-    }));
+    };
+    setProject(updatedProject);
+    onProjectUpdate(updatedProject);
   };
 
   return (
