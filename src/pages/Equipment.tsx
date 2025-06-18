@@ -3,14 +3,13 @@ import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Wrench, Calendar, MapPin, AlertTriangle } from "lucide-react";
+import { Calendar, MapPin, AlertTriangle, Wrench } from "lucide-react";
+import { AddEquipmentDialog } from "@/components/equipment/AddEquipmentDialog";
 
 const Equipment = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const equipment = [
+  const [equipment, setEquipment] = useState([
     {
       id: 1,
       name: "Excavator CAT 320",
@@ -51,7 +50,23 @@ const Equipment = () => {
       nextService: "2024-07-15",
       condition: "poor",
     },
-  ];
+  ]);
+
+  const handleAddEquipment = (newEquipment: {
+    name: string;
+    assetTag: string;
+    type: string;
+    status: string;
+    location: string;
+    nextService: string;
+    condition: string;
+  }) => {
+    const equipmentWithId = {
+      ...newEquipment,
+      id: Math.max(...equipment.map(e => e.id)) + 1,
+    };
+    setEquipment([...equipment, equipmentWithId]);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -101,10 +116,7 @@ const Equipment = () => {
                   Track and manage construction equipment and machinery.
                 </p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Equipment
-              </Button>
+              <AddEquipmentDialog onAddEquipment={handleAddEquipment} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
