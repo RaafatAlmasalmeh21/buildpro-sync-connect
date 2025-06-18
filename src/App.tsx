@@ -8,6 +8,7 @@ import { TutorialProvider } from "@/components/tutorial/TutorialProvider";
 import { CollaborationProvider } from "@/components/collaboration/CollaborationProvider";
 import Index from "./pages/Index";
 import Projects from "./pages/Projects";
+import ProjectDetails from "./pages/ProjectDetails";
 import Sites from "./pages/Sites";
 import Workforce from "./pages/Workforce";
 import Equipment from "./pages/Equipment";
@@ -32,6 +33,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:id" element={<ProjectDetails />} />
               <Route path="/sites" element={<Sites />} />
               <Route path="/workforce" element={<Workforce />} />
               <Route path="/equipment" element={<Equipment />} />
