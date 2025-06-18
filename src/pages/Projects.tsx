@@ -27,6 +27,20 @@ const initialProjects = [
     budget: "$2.4M",
     teamSize: 24,
     location: "Downtown Metro City",
+    assignedWorkers: [
+      {
+        id: 1,
+        name: "John Smith",
+        role: "Site Manager",
+        assignedDate: "2024-01-15",
+      },
+      {
+        id: 3,
+        name: "Mike Johnson",
+        role: "Project Coordinator", 
+        assignedDate: "2024-01-20",
+      },
+    ],
   },
   {
     id: 2,
@@ -40,6 +54,14 @@ const initialProjects = [
     budget: "$5.1M",
     teamSize: 18,
     location: "North District",
+    assignedWorkers: [
+      {
+        id: 2,
+        name: "Sarah Wilson",
+        role: "Electrical Engineer",
+        assignedDate: "2024-03-01",
+      },
+    ],
   },
   {
     id: 3,
@@ -53,6 +75,20 @@ const initialProjects = [
     budget: "$8.7M",
     teamSize: 32,
     location: "Medical District",
+    assignedWorkers: [
+      {
+        id: 4,
+        name: "Lisa Chen",
+        role: "Safety Inspector",
+        assignedDate: "2023-09-01",
+      },
+      {
+        id: 5,
+        name: "David Brown",
+        role: "Foreman",
+        assignedDate: "2023-09-15",
+      },
+    ],
   },
   {
     id: 4,
@@ -66,6 +102,7 @@ const initialProjects = [
     budget: "$3.2M",
     teamSize: 15,
     location: "West Side Mall",
+    assignedWorkers: [],
   },
   {
     id: 5,
@@ -79,6 +116,14 @@ const initialProjects = [
     budget: "$1.8M",
     teamSize: 12,
     location: "Central Bridge",
+    assignedWorkers: [
+      {
+        id: 5,
+        name: "David Brown",
+        role: "Foreman",
+        assignedDate: "2023-11-01",
+      },
+    ],
   },
 ];
 
