@@ -14,7 +14,6 @@ import Workforce from "./pages/Workforce";
 import Equipment from "./pages/Equipment";
 import Timesheets from "./pages/Timesheets";
 import Safety from "./pages/Safety";
-import Reports from "./pages/Reports";
 import Documents from "./pages/Documents";
 import Settings from "./pages/Settings";
 import Tutorial from "./pages/Tutorial";
@@ -39,7 +38,6 @@ const App = () => (
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/timesheets" element={<Timesheets />} />
               <Route path="/safety" element={<Safety />} />
-              <Route path="/reports" element={<Reports />} />
               <Route path="/documents" element={<Documents />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/tutorial" element={<Tutorial />} />

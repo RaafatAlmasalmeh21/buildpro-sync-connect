@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -28,7 +27,6 @@ const navigation = [
   { name: "Equipment", href: "/equipment", icon: Wrench },
   { name: "Timesheets", href: "/timesheets", icon: Clock },
   { name: "Safety", href: "/safety", icon: Shield },
-  { name: "Reports", href: "/reports", icon: BarChart3 },
   { name: "Documents", href: "/documents", icon: FileText },
   { name: "Tutorial", href: "/tutorial", icon: BookOpen },
   { name: "Settings", href: "/settings", icon: Settings },
